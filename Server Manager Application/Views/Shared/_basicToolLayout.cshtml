@@ -1,0 +1,181 @@
+﻿@using Server_Manager_Application.Models.Nativization
+@using Server_Manager_Application.Models.Static
+
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - @ViewBag.AppName</title>
+
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/spacelab_bootstrap.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/Server_Manager_Application.styles.css" asp-append-version="true" />
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-lg bg-light" data-bs-theme="light">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarColor03">
+                        <div>
+                            <ul class="navbar-nav me-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:500; font-size:larger;">@LocalUserInfo.username</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" id="user_about_button">@CommonWords.profile</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout">@CommonWords.logout</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" id="app_home_button" asp-area="" asp-controller="Home" asp-action="Index">@CommonWords.home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="app_about_button">@CommonWords.about</a>
+                            </li>
+                        </ul>
+                        <form class="d-flex" id="searchForm">
+                            <input class="form-control me-sm-2" type="search" placeholder=@CommonWords.search id="searchInput">
+                            <button class="btn btn-secondary my-2 my-sm-0" type="submit">@CommonWords.search</button>
+                        </form>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div>
+            @RenderBody()
+        </div>
+        <footer class="border-top footer text-muted" style="position: fixed; bottom: 0; width: 100%;">
+            <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">@LocalUserInfo.domain</a>
+                    <form id="console_form" class="input-group mb-3" style="display:contents;">
+                        <span class="input-group-text">></span>
+                        <input type="text" class="form-control" name="m_String" id="input_terminal">
+                        <button class="btn btn-warning" type="submit" id="button-addon2">^</button>
+                    </form>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </nav>
+        </footer>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+        <script>
+            const maxSize = 500;
+            const terminal = document.getElementById("terminal");
+
+            let input_terminal = document.getElementById("input_terminal");
+            let submit_terminal = document.getElementById("button-addon2");
+            
+
+            async function spawnAboutElement()
+            {
+                document.body.innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", new Server_Manager_Application.Models.Messaging.InfoMessage { id = 10, title = @ViewBag.AppName, description = "", message = "@Copyright 2025 / 2025" })`;
+            }
+
+            async function performMessageAnimation(message_container) {
+                await fadeIn(message_container, 500);
+            }
+
+            async function sendConsoleCommand(event) {
+                const formData = new FormData(event.target);
+                const data = {};
+
+                formData.forEach((value, key) => data[key] = value);
+
+                input_terminal.disabled = true;
+                submit_terminal.disabled = true;
+
+                try {
+                    const response = await fetch('/Tools/Console', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (terminal.childElementCount >= maxSize)
+                    {
+                        terminal.children[0].remove();
+                    }
+
+                    newParagraph = document.createElement('p');
+                    newParagraph.setAttribute("class", "text-light");
+                    newParagraph.textContent = "> " + formData.get("m_String");
+
+                    terminal.appendChild(newParagraph);
+
+                    if (result.response != null && result.response != "" && result.response != "</br>") 
+                    {
+                        newParagraph = document.createElement('p');
+                        newParagraph.setAttribute("class", result.state);
+                        newParagraph.innerHTML = result.response;
+
+                        terminal.appendChild(newParagraph);
+                    }
+                } 
+                catch (err) 
+                {
+                    console.error(err);
+
+                    document.body.innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_RedAlert",
+                        new Server_Manager_Application.Models.Messaging.AlertMessage { 
+                            id = 349, 
+                            title = CommonWords.error.ToUpper() + ":", 
+                            description = "err", 
+                            message = "" 
+                        }
+                    )`.replace("err", err.message);
+        
+                    const message_container = document.getElementById("widget_349");
+                    document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(message_container)});
+
+                    performMessageAnimation(message_container);
+                }
+                finally
+                {
+                    input_terminal = document.getElementById("input_terminal");
+                    submit_terminal = document.getElementById("button-addon2");
+
+                    input_terminal.value = "";
+
+                    input_terminal.disabled = false;
+                    submit_terminal.disabled = false;
+
+                    input_terminal.focus();
+
+                    window.scrollTo(
+                        {
+                            top: document.body.scrollHeight,
+                            behavior: 'smooth'
+                        }
+                    );
+                }
+            }
+
+            document.getElementById('console_form').addEventListener('submit', async (event) => 
+                {
+                    event.preventDefault(); // Prevent default form submission
+                    await sendConsoleCommand(event);
+                }
+            );
+
+        </script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+</html>

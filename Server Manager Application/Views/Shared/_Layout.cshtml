@@ -1,0 +1,74 @@
+﻿@using Server_Manager_Application.Models.Nativization
+@using Server_Manager_Application.Models.Static
+
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - @ViewBag.AppName</title>
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/spacelab_bootstrap.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/Server_Manager_Application.styles.css" asp-append-version="true" />
+    </head>
+    <body style="background-color: #f2efe9;">
+        <header>
+            <nav class="navbar navbar-expand-lg bg-light" data-bs-theme="light">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarColor03">
+                        <div>
+                            <ul class="navbar-nav me-auto">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:500; font-size:larger;">@LocalUserInfo.username</a>
+                                    <div class="dropdown-menu">
+                                    <a class="dropdown-item" id="user_about_button">@CommonWords.profile</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" asp-area="" asp-controller="User" asp-action="Logout">@CommonWords.logout</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="app_about_button">@CommonWords.about</a>
+                            </li>
+                        </ul>
+                    <a class="navbar-brand" id="a_time">@ViewBag.Hour</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container">
+        <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
+        </div>
+        <footer class="border-top footer text-muted" style="position: fixed; bottom: 0; width: 100%">
+            <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" >
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">@LocalUserInfo.domain</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </nav>
+        </footer>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+        <script>
+            async function spawnAboutElement()
+            {
+                document.body.innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", new Server_Manager_Application.Models.Messaging.InfoMessage { id = 10, title = @ViewBag.AppName, description = "", message = "@Copyright 2025 / 2025" })`;
+            }
+        </script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+</html>

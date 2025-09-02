@@ -1,0 +1,8 @@
+﻿@* Views/Shared/Widgets/Messaging/_RedAlert.cshtml *@
+
+@model Server_Manager_Application.Models.Messaging.AlertMessage
+
+<div class="alert alert-dismissible alert-danger" id="widget_@Model.id" style="position:fixed; top:75%; left:25%; min-width:50%;">
+    <button type="button" class="btn-close" data-bs-dismiss="alert" id="btn_@Model.id"></button>
+    <strong>@Model.title</strong> <a href="#" class="alert-link">@Model.description</a>@Model.message
+</div>

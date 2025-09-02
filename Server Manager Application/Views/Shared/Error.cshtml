@@ -1,0 +1,20 @@
+﻿@using Server_Manager_Application.Models.Nativization
+
+@model ErrorViewModel
+@{
+    ViewData["Title"] = CommonWords.error;
+}
+
+<h1 class="text-danger" style="margin: 50px;">@Model.ErrorCode</h1>
+<h2 class="text-danger" style="margin-bottom: 25px;">@Model.ErrorDescription</h2>
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+<p>
+    @Model.ErrorMessage
+</p>

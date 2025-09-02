@@ -1,0 +1,18 @@
+﻿@* Views/Shared/Widgets/Cards/_CardHeader.cshtml *@
+
+@model Server_Manager_Application.Models.Messaging.MultiMediaCardMessage
+
+
+<div class="card border-dark mb-3" style="min-width: 20rem; margin: 50px;" id="widget_@Model.id">
+    <div class="card-header">@Model.header</div>
+    <div class="card-body">
+        <h4 class="card-title">@Model.title</h4>
+        <p class="card-text">@Model.description</p>
+        
+        <span id="btn_@Model.id">
+            <a class="a_link_@Model.id" asp-area="" asp-controller="@Model.controller" asp-action="@Model.action" style="width:100%; justify-content:center;  align-content:center; display:flex;">
+                <img src="@Model.imageSrc" style="width: 33%; height: 33%;">
+            </a>
+        </span>
+    </div>
+</div>

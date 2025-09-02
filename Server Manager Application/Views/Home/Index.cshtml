@@ -1,0 +1,32 @@
+﻿@using Server_Manager_Application.Models.Nativization
+
+@{
+    ViewData["Title"] = CommonWords.home + " " + CommonWords.page;
+}
+
+
+<div class="text-center" style="margin-top: 50px;">
+    <h1 class="display-5">@CommonPhrases.welcomeTo <u>@ViewBag.AppName</u></h1>
+    <p></p>
+    <p></p>
+</div>
+
+<div id="page-container" style="display: flex; flex-wrap:wrap; justify-content:center; align-content:center; overflow: auto;">
+
+</div>
+
+<script>
+    async function spawnAboutElement()
+    {
+        document.body.innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", new Server_Manager_Application.Models.Messaging.InfoMessage { id = 10, title = @ViewBag.AppName, description = "", message = "@Copyright 2025 / 2025" })`;
+    }
+
+    document.getElementById("page-container").innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardHeader", new Server_Manager_Application.Models.Messaging.MultiMediaCardMessage { id = 0, header = CommonWords.storage, description = @ViewBag.ProgramOption1 + " Under development...", imageSrc = "/content/icons/io-level/device-hdd.svg" })`;
+    document.getElementById("page-container").innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardHeader", new Server_Manager_Application.Models.Messaging.MultiMediaCardMessage { id = 1, header = CommonWords.console, description = @ViewBag.ProgramOption2, imageSrc = "/content/icons/user-level/terminal.svg", controller = "Tools", action = "Console" })`;
+
+    const disabled_option_0 = document.getElementById("widget_0");
+
+    disabled_option_0.disabled = true;
+    disabled_option_0.style.opacity = 0.6;
+    disabled_option_0.style.pointerEvents = 'none';
+</script>

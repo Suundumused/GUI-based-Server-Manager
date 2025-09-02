@@ -1,0 +1,35 @@
+﻿@using System.Web
+@using Server_Manager_Application.Models.Nativization
+
+@model Server_Manager_Application.Models.Security.Credentials
+
+@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = CommonWords.login;
+}
+
+<style>
+    body {
+        background-color: #1D1616;
+        display:flex;
+        flex-direction:column;
+    }
+</style>
+
+<div style="position:fixed; top:25%; left:25%; min-width:50%;">
+
+    <form method="post" asp-controller="User" asp-action="Login">
+        <fieldset style="display:flex; flex-direction:column;">
+            <div>
+                <label for="exampleInputEmail1" class="form-label mt-4" style="color:aliceblue">@LoginRelatedWords.username</label>
+                <input type="text" class="form-control" id="exampleInputEmail1" asp-for="Username" aria-describedby="emailHelp" placeholder=@LoginRelatedWords.username autocomplete="on">
+            </div>
+            <div>
+                <label for="exampleInputPassword1" class="form-label mt-4" style="color:aliceblue">@LoginRelatedWords.password</label>
+                <input type="password" class="form-control" id="exampleInputPassword1" asp-for="Password" placeholder=@LoginRelatedWords.password autocomplete="off">
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 50px; min-width:75%; align-self:center;">@LoginRelatedWords.submit</button>
+        </fieldset>
+    </form>
+    
+</div>

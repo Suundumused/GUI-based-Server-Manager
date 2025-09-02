@@ -1,0 +1,74 @@
+﻿@using Server_Manager_Application.Models.Nativization
+
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - @ViewBag.AppName</title>
+
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/spacelab_bootstrap.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/Server_Manager_Application.styles.css" asp-append-version="true" />
+    </head>
+    <body>
+        <header style="justify-content:initial">
+            <nav class="navbar navbar-expand-lg bg-light" data-bs-theme="light">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarColor03">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <image src="\content\icons\user-level\person-vcard-fill.svg" style="min-height: 32px; min-width: 32px; margin:6.5px;"></image>
+                            </li>
+                            <li class="nav-item" style="align-content:center;">
+                                <a class="navbar-brand"> • @ViewBag.CompanyName</a>
+                            </li>
+                        </ul>
+                    <a class="navbar-brand" id="a_time">@ViewBag.Hour</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div>
+            @RenderBody()
+        </div>
+        <footer>
+            <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" style="bottom:0; position: fixed; width:100%;">
+            </nav>
+        </footer>
+
+        <script src="~/lib/jquery/dist/jquery.min.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+        <script>
+            if ('@ViewBag.LoginState' !== '')
+            {
+                document.body.innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_RedAlert",
+                    new Server_Manager_Application.Models.Messaging.AlertMessage { 
+                        id = 349, 
+                        title = CommonWords.error.ToUpper(), 
+                        description = ViewBag.LoginState, 
+                        message = "" 
+                    }
+                )`;
+        
+                const message_container = document.getElementById("widget_349");
+                document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(message_container)});
+
+                async function performMessageAnimation() {
+                    await fadeIn(message_container, 500);
+                }
+
+                performMessageAnimation();
+            }
+        </script>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+</html>
