@@ -170,7 +170,7 @@ Change the server's IP and port by modifying the “`Url`” Kestrel keys in `ap
  - Example of use case with /Tools/Console. Basic CMD commands and `highlighting` words in the search box.
 
  <div align="center">
-    <img src="https://raw.githubusercontent.com/Suundumused/GUI-based-Server-Manager/refs/heads/main/README_ASSETS/Screenshot2.png" alt="Web Widget Preview"/>
+    <img src="https://raw.githubusercontent.com/Suundumused/GUI-based-Server-Manager/refs/heads/main/README_ASSETS/Screenshot_2.png" alt="Web Widget Preview"/>
 </div>
 
  - The CommandRunner class is only instantiated in the program and is not separated in cases of multiple users on the server.
