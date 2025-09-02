@@ -167,14 +167,14 @@ Change the server's IP and port by modifying the “`Url`” Kestrel keys in `ap
  - The static `PasswordInput` class manages all user password validation and creation.
 
 ### Testing
- - Example of use case with /Tools/Console. Basic CMD commands and `highlighting` words in the search box.
+ - Example of use case with `/Tools/Console`. Basic CMD commands and `highlighting` words in the search box.
 
  <div align="center">
     <img src="https://raw.githubusercontent.com/Suundumused/GUI-based-Server-Manager/refs/heads/main/README_ASSETS/Screenshot_2.png" alt="Web Widget Preview"/>
 </div>
 
- - The CommandRunner class is only instantiated in the program and is not separated in cases of multiple users on the server.
- - Currently, it does not support interactivity, so typing `python` will not return a response. Although the process has been executed, the terminal will be blocked, and it will be necessary to call freset to reinitiate `CommandRunner`.
+ - The `CommandRunner` class is only instantiated in the program and is not separated in cases of multiple users on the server.
+ - Currently, it does not support interactivity, so typing `python` will not return a response. Although the process has been executed, the terminal will be blocked, and it will be necessary to call `freset` to reinitiate `CommandRunner`.
 
 ### Contribute
  - Feel free to add features.
