@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
+
+using Server_Manager_Application.Common.Logging.Console_Utils;
 using Server_Manager_Application.Resources.Languages;
 
 
@@ -117,11 +119,13 @@ namespace Server_Manager_Application.Runtime.HighLevel
                 {
                     _process.Kill(entireProcessTree: true);
                     await _process.WaitForExitAsync();
+
+                    Printer.Print("OK");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{AppResources.Error} killing process: {ex.Message}");
+                Printer.Print($"{AppResources.Error} killing process: {ex.Message}");
             }
             finally
             {

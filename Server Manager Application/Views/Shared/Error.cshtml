@@ -2,19 +2,24 @@
 
 @model ErrorViewModel
 @{
+    Layout = "_LoginLayout";
     ViewData["Title"] = CommonWords.error;
 }
 
-<h1 class="text-danger" style="margin: 50px;">@Model.ErrorCode</h1>
-<h2 class="text-danger" style="margin-bottom: 25px;">@Model.ErrorDescription</h2>
+<div style="position:fixed; top:15%; left:15%; min-width:50%;">
+    <h1 class="text-danger" style="margin: 50px;">@Model.ErrorCode</h1>
+    <h2 class="text-danger" style="margin-bottom: 25px;">@Model.ErrorDescription</h2>
 
-@if (Model.ShowRequestId)
-{
+    @if (Model.ShowRequestId)
+    {
+        <p>
+            <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        </p>
+    }
+
     <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+        @Model.ErrorMessage
     </p>
-}
+</div>
 
-<p>
-    @Model.ErrorMessage
-</p>
+

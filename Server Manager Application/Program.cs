@@ -101,7 +101,7 @@ namespace Server_Manager_Application
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.LoginPath = "/User/Login";   // Redireciona se não estiver logado
+                    options.LoginPath = "/User/Login";
                     options.LogoutPath = "/User/Logout";
 
                     options.Cookie.HttpOnly = true; // Protect from XSS
@@ -117,6 +117,13 @@ namespace Server_Manager_Application
             builder.Services.AddHttpContextAccessor();
 
             WebApplication? app = builder.Build();
+
+            IHostApplicationLifetime? lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+
+            lifetime.ApplicationStopping.Register(() =>
+            {
+                commandRunner.CloseAsync().Wait();
+            });
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions // Security headers (behind reverse proxy support)
             {

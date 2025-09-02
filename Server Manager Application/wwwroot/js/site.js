@@ -86,8 +86,12 @@ function handleCloseMessage(element) {
 async function main()
 {
     const time_clock_element = document.getElementById("a_time");
+    const about_btn = document.getElementById("app_about_button");
 
-    document.getElementById("app_about_button").addEventListener('click', handleAboutPopUp);
+    if (about_btn !== null)
+    {
+        about_btn.addEventListener('click', handleAboutPopUp);
+    }
 
     if (time_clock_element !== null)
     {

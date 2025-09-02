@@ -4,7 +4,7 @@ using System.Security;
 
 public static class PasswordInput
 {
-    private static string possibleCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+    private static string possibleCharacters { get; } = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
     private static SecureString _password { get; } = new SecureString();
 
 

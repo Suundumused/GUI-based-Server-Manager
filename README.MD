@@ -19,6 +19,7 @@ This is a template project for easy control of remote personal computers/servers
 - [Project structure](#project-structure)
 - [Security](#security)
 - [Testing](#testing)
+- [Contribute](#contribute)
 ---
 ### Key Features
 
@@ -43,9 +44,6 @@ This is a template project for easy control of remote personal computers/servers
 ---
 ### Prerequisites
 - [.NET SDK `8.0` or later](https://dotnet.microsoft.com/)
-```bash
-dotnet tool install --global dotnet-ef
-```
 ---
 #### NuGet Packages
 - `System.CommandLine`
@@ -104,3 +102,82 @@ Change the server's IP and port by modifying the “`Url`” Kestrel keys in `ap
 <div align="center">
     <img src="https://raw.githubusercontent.com/Suundumused/GUI-based-Server-Manager/refs/heads/main/README_ASSETS/Screenshot1.png" alt="Web Widget Preview"/>
 </div>
+
+### Security
+ - Only the HTTPs protocol is permitted. 
+
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
+ - All routes require authentication, except when specified `[AllowAnonymous]`. Anonymous routes should use the base layout `_LoginLayout.cshtml`, which does not expose sensitive information.`
+
+        builder.Services.AddControllersWithViews(options => 
+            {
+                options.Filters.Add(new AuthorizeFilter());
+            }
+        );
+
+ - Basic way to evade attempts to track the password saved in memory by attempting to log in with an incorrect username.
+
+        if (username == LocalUserInfo.username)
+        {
+            if (PasswordInput.SecureEquals(PasswordInput.ConvertString(password)))
+            {
+                if (!remoteAttempts[ipAddress]._TokenSource.IsCancellationRequested)
+                {
+                    remoteAttempts[ipAddress]._TokenSource.Cancel();
+                }
+
+                remoteAttempts.Remove(ipAddress);
+
+                return Task.FromResult((Int16)2);
+            }
+        }
+
+  - Exception messages are only displayed on the Error screen if the user is logged in.
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [AllowAnonymous]
+        public IActionResult Error()
+        {
+            HttpContext context = HttpContext;
+            System.Security.Principal.IIdentity? identity = context.User.Identity;
+
+            int status_code = context.Response.StatusCode;
+
+            if (identity is not null) 
+            {
+                if (identity.IsAuthenticated)
+                {
+                    IExceptionHandlerPathFeature? exceptionHandlerPathMessage = context.Features.Get<IExceptionHandlerPathFeature>();
+
+                    if (exceptionHandlerPathMessage?.Error is not null)
+                    {
+                        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? context.TraceIdentifier, ErrorCode = status_code, ErrorDescription = ReasonPhrases.GetReasonPhrase(status_code), ErrorMessage = exceptionHandlerPathMessage.Error.Message });
+                    }
+                }
+            }
+
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? context.TraceIdentifier, ErrorCode = status_code, ErrorDescription = ReasonPhrases.GetReasonPhrase(status_code)});
+        }
+
+<div align="center">
+    <img src="https://raw.githubusercontent.com/Suundumused/GUI-based-Server-Manager/refs/heads/main/README_ASSETS/Screenshot4.png" alt="Web Widget Preview"/>
+</div>
+
+ - The static `PasswordInput` class manages all user password validation and creation.
+
+### Testing
+ - Example of use case with /Tools/Console. Basic CMD commands and `highlighting` words in the search box.
+
+ <div align="center">
+    <img src="https://raw.githubusercontent.com/Suundumused/GUI-based-Server-Manager/refs/heads/main/README_ASSETS/Screenshot2.png" alt="Web Widget Preview"/>
+</div>
+
+ - The CommandRunner class is only instantiated in the program and is not separated in cases of multiple users on the server.
+ - Currently, it does not support interactivity, so typing `python` will not return a response. Although the process has been executed, the terminal will be blocked, and it will be necessary to call freset to reinitiate `CommandRunner`.
+
+### Contribute
+ - Feel free to add features.
+
+#### Bitcoin :: **bc1qa0xzyhcmcsuvppttmylzygwwfaken5jturhgek**
+#### Ethereum :: **0x2fA70716D1Ae2f4994Be8e249b609056D72Ce80a** 
