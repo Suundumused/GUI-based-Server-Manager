@@ -52,7 +52,7 @@ Use `dotnet restore` to recover the packages.
 
 ---
 ### Usage
-`..` When you start the program, the terminal will be blank, displaying only `..` This means that it is waiting for the user to enter a password to create the Web App password than press ENTER. The characters are not displayed on the terminal to prevent them from being exploited in memory. The `username` will always be the `local username` of the operating system running the web server.
+`..` When you start the program, the terminal will be blank, displaying only `..` This means that it is waiting for the user to enter a password to create the Web App password, than press ENTER. The characters are not displayed on the terminal to prevent them from being exploited in memory. The `username` will always be the `local username` of the operating system running the web server.
 
 `--login_attempts 5` Maximum login attempts per IP address within a given time interval.
 
