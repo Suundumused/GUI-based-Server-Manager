@@ -44,6 +44,7 @@ This is a template project for easy control of remote personal computers/servers
 ---
 ### Prerequisites
 - [.NET SDK `8.0` or later](https://dotnet.microsoft.com/)
+- OS: `Windows` or `Linux`
 ---
 #### NuGet Packages
 - `System.CommandLine`
@@ -52,13 +53,19 @@ Use `dotnet restore` to recover the packages.
 
 ---
 ### Usage
-`..` When you start the program, the terminal will be blank, displaying only `..` This means that it is waiting for the user to enter a password to create the Web App password, than press ENTER. The characters are not displayed on the terminal to prevent them from being exploited in memory. The `username` will always be the `local username` of the operating system running the web server.
+
+    dotnet run
 
 `--login_attempts 5` Maximum login attempts per IP address within a given time interval.
 
 `--time_out 90` IP ban time after exhausting login attempts (in seconds).
 
 `--sess-time_out 360` Time before the user session expires (in seconds).
+
+
+`..` When you start the program, the terminal will be blank, displaying only `..` This means that it is waiting for the user to enter a password to create the Web App password, than press ENTER. The characters are not displayed on the terminal to prevent them from being exploited in memory. The `username` will always be the `local username` of the operating system running the web server.
+
+`Username`: To obtain the local username used, type `whoami` in the Linux terminal or `echo %USERNAME%` in Windows CMD. This is the username used to log in to the host.
 
 ---
 ### Local Setup
