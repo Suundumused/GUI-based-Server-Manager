@@ -82,6 +82,13 @@ Change the server's IP and port by modifying the “`Url`” Kestrel keys in `ap
       }
     }
 
+Change basic and public information displayed when accessing the Web App Login screen.
+
+    "Basic": {
+        "AppName": "GUI-Based Server Management",
+        "CompanyName": "My Company ™"
+    },
+
 ### Project Structure
 
 ```plaintext
