@@ -21,11 +21,11 @@
     {
         if (!targetElement) return;
 
-        new_text = document.createElement("span");
-        new_text.className = highlightClass;
-        new_text.innerHTML = searchString;
+        newText = document.createElement("span");
+        newText.className = highlightClass;
+        newText.innerHTML = searchString;
 
-        targetElement.innerHTML = targetElement.innerHTML.replace(new RegExp(searchString, 'gi'), new_text.outerHTML);
+        targetElement.innerHTML = targetElement.innerHTML.replace(new RegExp(searchString, 'gi'), newText.outerHTML);
     }
 
     function reverseHighlightText(targetElement, highlightClass = highlightClassTheme)

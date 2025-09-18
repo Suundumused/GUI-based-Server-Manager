@@ -12,7 +12,6 @@
 
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
         <link rel="stylesheet" href="~/css/spacelab_bootstrap.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/Server_Manager_Application.styles.css" asp-append-version="true" />
     </head>
     <body>
         <header>
@@ -59,7 +58,7 @@
                     <a class="navbar-brand" href="#">@LocalUserInfo.domain</a>
                     <form id="console_form" class="input-group mb-3" style="display:contents;">
                         <span class="input-group-text">></span>
-                        <input type="text" class="form-control" name="m_String" id="input_terminal">
+                        <input type="text" class="form-control" name="mString" id="inputTerminal">
                         <button class="btn btn-warning" type="submit" id="button-addon2">^</button>
                     </form>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -73,12 +72,12 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
 
-        <script>
+        <script async>
             const maxSize = 500;
             const terminal = document.getElementById("terminal");
 
-            let input_terminal = document.getElementById("input_terminal");
-            let submit_terminal = document.getElementById("button-addon2");
+            let inputTerminal = document.getElementById("inputTerminal");
+            let submitTerminal = document.getElementById("button-addon2");
             
 
             async function spawnAboutElement()
@@ -86,24 +85,26 @@
                 document.body.innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", new Server_Manager_Application.Models.Messaging.InfoMessage { id = 10, title = @ViewBag.AppName, description = "", message = "@Copyright 2025 / 2025" })`;
             }
 
-            async function performMessageAnimation(message_container) {
-                await fadeIn(message_container, 500);
+            async function performMessageAnimation(messageContainer) {
+                await fadeIn(messageContainer, 500);
             }
 
             async function sendConsoleCommand(event) {
+                const signal = AbortSignal.timeout(7000);
                 const formData = new FormData(event.target);
                 const data = {};
 
                 formData.forEach((value, key) => data[key] = value);
 
-                input_terminal.disabled = true;
-                submit_terminal.disabled = true;
+                inputTerminal.disabled = true;
+                submitTerminal.disabled = true;
 
                 try {
                     const response = await fetch('/Tools/Console', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(data)
+                        body: JSON.stringify(data),
+                        signal: signal
                     });
 
                     const result = await response.json();
@@ -115,7 +116,7 @@
 
                     newParagraph = document.createElement('p');
                     newParagraph.setAttribute("class", "text-light");
-                    newParagraph.textContent = "> " + formData.get("m_String");
+                    newParagraph.textContent = "> " + formData.get("mString");
 
                     terminal.appendChild(newParagraph);
 
@@ -141,22 +142,22 @@
                         }
                     )`.replace("err", err.message);
         
-                    const message_container = document.getElementById("widget_349");
-                    document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(message_container)});
+                    const messageContainer = document.getElementById("widget_349");
+                    document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(messageContainer)});
 
-                    performMessageAnimation(message_container);
+                    performMessageAnimation(messageContainer);
                 }
                 finally
                 {
-                    input_terminal = document.getElementById("input_terminal");
-                    submit_terminal = document.getElementById("button-addon2");
+                    inputTerminal = document.getElementById("inputTerminal");
+                    submitTerminal = document.getElementById("button-addon2");
 
-                    input_terminal.value = "";
+                    inputTerminal.value = "";
 
-                    input_terminal.disabled = false;
-                    submit_terminal.disabled = false;
+                    inputTerminal.disabled = false;
+                    submitTerminal.disabled = false;
 
-                    input_terminal.focus();
+                    inputTerminal.focus();
 
                     window.scrollTo(
                         {

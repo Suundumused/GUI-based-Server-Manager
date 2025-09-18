@@ -26,7 +26,7 @@ namespace Server_Manager_Application
         private static Int16 sessTimeOut = 360;
 
 
-        public static void Main(string[] args) 
+        public static void Main(string[] args)
         {
             Option<Int16> loginAttemptsOption = new Option<Int16>("--login_attempts")
             {
@@ -52,7 +52,7 @@ namespace Server_Manager_Application
 
             ParseResult? parseResult = rootCommand.Parse(args);
 
-            try 
+            try
             {
                 if (parseResult.GetValue(loginAttemptsOption) is Int16 typedLoginAttempts)
                 {
@@ -69,7 +69,7 @@ namespace Server_Manager_Application
                     sessTimeOut = typedSessTimeOut;
                 }
             }
-            catch (System.InvalidOperationException ex) 
+            catch (System.InvalidOperationException ex)
             {
                 Printer.Print(ex.Message);
                 Environment.Exit(2);
@@ -77,7 +77,7 @@ namespace Server_Manager_Application
 
             IReadOnlyList<ParseError>? parseErros = parseResult.Errors;
 
-            if (parseErros.Count > 0) 
+            if (parseErros.Count > 0)
             {
                 foreach (ParseError parseError in parseErros)
                 {
@@ -93,7 +93,7 @@ namespace Server_Manager_Application
             WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
             builder.Services.Configure<BasicOptions>(builder.Configuration.GetSection("Basic"));
-            builder.Services.AddControllersWithViews(options => 
+            builder.Services.AddControllersWithViews(options =>
                 {
                     options.Filters.Add(new AuthorizeFilter());
                 }
@@ -126,9 +126,10 @@ namespace Server_Manager_Application
             });
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions // Security headers (behind reverse proxy support)
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                }
+            );
 
             development_state = app.Environment.IsDevelopment();
 

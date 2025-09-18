@@ -29,16 +29,23 @@ namespace Server_Manager_Application.Controllers
                 return Json(new { response = AppResources.ParserError, state = false });
             }
 
-            if (jsonData.TryGetProperty("m_String", out JsonElement commandElement)) 
+            if (jsonData.TryGetProperty("mString", out JsonElement commandElement)) 
             {
                 string stringCommand = commandElement.ToString();
 
-                if (stringCommand.ToLower() == "freset") 
+                switch (stringCommand.ToLower())
                 {
-                    await Program.commandRunner.CloseAsync();
-                    Program.commandRunner = new CommandRunner();
+                    case "freset":
+                        await Program.commandRunner.CloseAsync();
+                        Program.commandRunner = new CommandRunner();
 
-                    return Json(new { response = AppResources.TerminalReboot, state = false });
+                        return Json(new { response = AppResources.TerminalReboot, state = false });
+
+                    case "fshutdown":
+                        await Program.commandRunner.CloseAsync();
+                        Environment.Exit(0);
+
+                        break;
                 }
 
                 (string, string) cmdResult = await Program.commandRunner.ExecuteCommandAsync(stringCommand);
