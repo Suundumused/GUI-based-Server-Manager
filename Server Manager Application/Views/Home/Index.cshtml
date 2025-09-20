@@ -21,12 +21,12 @@
         document.body.innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", new Server_Manager_Application.Models.Messaging.InfoMessage { id = 10, title = @ViewBag.AppName, description = "", message = "@Copyright 2025 / 2025" })`;
     }
 
-    document.getElementById("page-container").innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardHeader", new Server_Manager_Application.Models.Messaging.MultiMediaCardMessage { id = 0, header = CommonWords.storage, description = @ViewBag.ProgramOption1 + " Under development...", imageSrc = "/content/icons/io-level/device-hdd.svg" })`;
+    document.getElementById("page-container").innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardHeader", new Server_Manager_Application.Models.Messaging.MultiMediaCardMessage { id = 0, header = CommonWords.storage, description = @ViewBag.ProgramOption1, imageSrc = "/content/icons/io-level/device-hdd.svg", controller = "Tools", action = "Path" })`;
     document.getElementById("page-container").innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardHeader", new Server_Manager_Application.Models.Messaging.MultiMediaCardMessage { id = 1, header = CommonWords.console, description = @ViewBag.ProgramOption2, imageSrc = "/content/icons/user-level/terminal.svg", controller = "Tools", action = "Console" })`;
 
     const disabledOption0 = document.getElementById("widget_0");
 
-    disabledOption0.disabled = true;
-    disabledOption0.style.opacity = 0.6;
-    disabledOption0.style.pointerEvents = 'none';
+    //disabledOption0.disabled = true;
+    //disabledOption0.style.opacity = 0.6;
+    //disabledOption0.style.pointerEvents = 'none';
 </script>

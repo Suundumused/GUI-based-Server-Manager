@@ -1,0 +1,59 @@
+﻿@using Server_Manager_Application.Models.Nativization
+
+@{
+    Layout = "_advancedToolLayout";
+    ViewData["Title"] = CommonWords.console;
+}
+
+<style>
+    body {
+        background-color: black;
+    }
+</style>
+
+<div id="paths" style="margin:1px; margin-bottom:65px;"></div>
+
+<script>
+    const highlightClassTheme = "badge bg-warning";
+
+
+    document.getElementById('searchForm').addEventListener('submit', (event) =>
+        {
+            event.preventDefault();
+
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const listText = document.getElementById("paths").getElementsByTagName("p");
+
+            if (searchTerm == null || searchTerm == " " || searchTerm == "")
+            {
+                for (let i = 0; i < listText.length; i++) 
+                {
+                    //reverseHighlightText(listText[i]);
+                }
+
+                return;
+            }
+
+            for (let i = 0; i < listText.length; i++) {
+                let asElement = listText[i];
+
+                if (asElement.textContent.toLowerCase().includes(searchTerm))
+                {
+                    //reverseHighlightText(asElement);
+                    //highlightText(asElement, searchTerm);
+                }
+                else
+                {
+                    reverseHighlightText(asElement);
+                }
+            }
+        }
+    );
+
+    document.getElementById('searchInput').addEventListener('keyup', (event) =>
+        {
+            
+        }
+    );
+
+</script>

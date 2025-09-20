@@ -22,14 +22,14 @@ namespace Server_Manager_Application.Controllers
         }
 
         [HttpPost]
-        public async Task <JsonResult> Console([FromBody] System.Text.Json.JsonElement jsonData)
+        public async Task<JsonResult> Console([FromBody] System.Text.Json.JsonElement jsonData)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
             {
                 return Json(new { response = AppResources.ParserError, state = false });
             }
 
-            if (jsonData.TryGetProperty("mString", out JsonElement commandElement)) 
+            if (jsonData.TryGetProperty("mString", out JsonElement commandElement))
             {
                 string stringCommand = commandElement.ToString();
 
@@ -54,6 +54,12 @@ namespace Server_Manager_Application.Controllers
             }
 
             return Json(new { response = AppResources.MissingField, state = false });
+        }
+        
+        [HttpGet]
+        public IActionResult Path()
+        {
+            return View();
         }
     }
 }
