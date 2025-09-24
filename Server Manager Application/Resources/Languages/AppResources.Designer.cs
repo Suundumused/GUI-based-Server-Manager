@@ -306,9 +306,51 @@ namespace Server_Manager_Application.Resources.Languages {
         /// <summary>
         ///   Looks up a localized string similar to Credentials did not match..
         /// </summary>
-        internal static string WrongPassword {
-            get {
+        internal static string WrongPassword
+        {
+            get
+            {
                 return ResourceManager.GetString("WrongPassword", resourceCulture);
+            }
+        }
+        
+        internal static string Name
+        {
+            get
+            {
+                return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+
+        internal static string Type
+        {
+            get
+            {
+                return ResourceManager.GetString("Type", resourceCulture);
+            }
+        }
+
+        internal static string Folder
+        {
+            get
+            {
+                return ResourceManager.GetString("Folder", resourceCulture);
+            }
+        }
+
+        internal static string Size
+        {
+            get
+            {
+                return ResourceManager.GetString("Size", resourceCulture);
+            }
+        }
+
+        internal static string LastModified
+        {
+            get
+            {
+                return ResourceManager.GetString("LastModified", resourceCulture);
             }
         }
     }

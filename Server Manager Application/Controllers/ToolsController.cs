@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
+using System.Text.Json;
+
+using Server_Manager_Application.Models.Messaging;
 using Server_Manager_Application.Models.Options;
 using Server_Manager_Application.Resources.Languages;
 using Server_Manager_Application.Runtime.HighLevel;
-using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
+using Server_Manager_Application.Common.Logging.Console_Utils;
+using System.Threading.Tasks;
 
 
 namespace Server_Manager_Application.Controllers
@@ -22,7 +27,7 @@ namespace Server_Manager_Application.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Console([FromBody] System.Text.Json.JsonElement jsonData)
+        public async Task<JsonResult> Console([FromBody] JsonElement jsonData)
         {
             if (!ModelState.IsValid)
             {
@@ -55,11 +60,70 @@ namespace Server_Manager_Application.Controllers
 
             return Json(new { response = AppResources.MissingField, state = false });
         }
-        
+
         [HttpGet]
-        public IActionResult Path()
+        [Route("Tools/Path/{*path}")]
+        public async Task<IActionResult> Path(string? path)
         {
-            return View();
+            if (System.IO.File.Exists(PathReadWrite.FullPath(path)))
+            {
+                return Redirect("/Tools/Download/" + path);
+            }
+
+            (List<FileData>, string, string?, bool) pathResult = await PathReadWrite.AccessDirectoryAsync(path);
+
+            string currentPath = pathResult.Item2;
+            string? errorMessage = pathResult.Item3;
+
+            if (pathResult.Item4)
+            {
+                TempData["Error"] = errorMessage;
+
+                return Redirect("/Tools/Path" + PathReadWrite.MainPath(currentPath));
+            }
+
+            return View(new PathResult
+                {
+                    files = pathResult.Item1,
+                    currentPath = currentPath,
+                }
+            );
+        }
+
+        [HttpGet]
+        [Route("Tools/Download/{*path}")]
+        public async Task<IActionResult?> Download(string path)
+        {
+            (FileStreamResult?, string, string?) PathResult = await PathReadWrite.FileStreamAsync(path);
+
+            if (PathResult.Item1 is null)
+            {
+                TempData["Error"] = PathResult.Item3;
+
+                return Redirect("/Tools/Path" + PathReadWrite.MainPath(PathReadWrite.GetParent(PathResult.Item2)));
+            }
+
+            return PathResult.Item1;
+        }
+
+        [HttpDelete]
+        [Route("Tools/Delete/{*path}")]
+        public async Task<IActionResult> Delete(string path)
+        {
+            (bool, string, string?) pathResult = await PathReadWrite.DeleteFile(path);
+
+            path = pathResult.Item2;
+
+            if (pathResult.Item1)
+            {
+                TempData["Error"] = pathResult.Item3;
+            }
+            else
+            {
+                TempData["Info"] = $"{path} Deletamento sucesso";
+            }
+
+            return Redirect("/Tools/Path" + PathReadWrite.MainPath(PathReadWrite.GetParent(path)));
         }
     }
 }

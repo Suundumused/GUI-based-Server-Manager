@@ -1,6 +1,9 @@
 ﻿@using Server_Manager_Application.Models.Nativization
 @using Server_Manager_Application.Models.Static
 
+@{
+    string? errorMessage = TempData["Error"] as string;
+}
 
 <!DOCTYPE html>
 
@@ -24,7 +27,7 @@
                         <div>
                             <ul class="navbar-nav me-auto">
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:500; font-size:larger;">@LocalUserInfo.username</a>
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:500; font-size:larger;">@LocalUserInfo.username</a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" id="user_about_button">@CommonWords.profile</a>
                                         <div class="dropdown-divider"></div>
@@ -38,7 +41,7 @@
                                 <a class="nav-link" id="app_home_button" asp-area="" asp-controller="Home" asp-action="Index">@CommonWords.home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#" id="app_about_button">@CommonWords.about</a>
+                                <a class="nav-link" id="app_about_button">@CommonWords.about</a>
                             </li>
                         </ul>
                         <form class="d-flex" id="searchForm">
@@ -50,12 +53,13 @@
             </nav>
         </header>
         <div>
+            <div id="messageContainer"></div>
             @RenderBody()
         </div>
         <footer class="border-top footer text-muted" style="position: fixed; bottom: 0; width: 100%">
             <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" >
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">@LocalUserInfo.domain</a>
+                    <a class="navbar-brand" >@LocalUserInfo.domain</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -68,16 +72,45 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
 
         <script async>
-            const paths = document.getElementById("paths");            
+            const paths = document.getElementById("paths");
+            const errorMessage = `@Html.Raw(errorMessage)`;            
 
 
             async function spawnAboutElement()
             {
-                document.body.innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", new Server_Manager_Application.Models.Messaging.InfoMessage { id = 10, title = @ViewBag.AppName, description = "", message = "@Copyright 2025 / 2025" })`;
+                document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", 
+                    new Server_Manager_Application.Models.Messaging.InfoMessage { 
+                        id = 10, 
+                        title = @ViewBag.AppName, 
+                        description = "", 
+                        message = "@Copyright 2025 / 2025" 
+                    }
+                )`;
             }
 
             async function performMessageAnimation(messageContainer) {
                 await fadeIn(messageContainer, 500);
+            }
+
+            if (errorMessage !== "")
+            {
+                document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_AlertBox",
+                    new Server_Manager_Application.Models.Messaging.AlertMessage { 
+                        id = 349, 
+                        title = CommonWords.error.ToUpper(), 
+                        description = ViewBag.LoginState, 
+                        message = errorMessage 
+                    }
+                )`;
+        
+                const messageContainer = document.getElementById("widget_349");
+                document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(messageContainer)});
+
+                async function performMessageAnimation() {
+                    await fadeIn(messageContainer, 500);
+                }
+
+                performMessageAnimation();
             }
         
         </script>

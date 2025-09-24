@@ -24,7 +24,7 @@
                         <div>
                             <ul class="navbar-nav me-auto">
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:500; font-size:larger;">@LocalUserInfo.username</a>
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:500; font-size:larger;">@LocalUserInfo.username</a>
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item" id="user_about_button">@CommonWords.profile</a>
                                         <div class="dropdown-divider"></div>
@@ -38,7 +38,7 @@
                                 <a class="nav-link" id="app_home_button" asp-area="" asp-controller="Home" asp-action="Index">@CommonWords.home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#" id="app_about_button">@CommonWords.about</a>
+                                <a class="nav-link" id="app_about_button">@CommonWords.about</a>
                             </li>
                         </ul>
                         <form class="d-flex" id="searchForm">
@@ -50,12 +50,13 @@
             </nav>
         </header>
         <div>
+            <div id="messageContainer"></div>
             @RenderBody()
         </div>
         <footer class="border-top footer text-muted" style="position: fixed; bottom: 0; width: 100%;">
             <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">@LocalUserInfo.domain</a>
+                    <a class="navbar-brand" >@LocalUserInfo.domain</a>
                     <form id="console_form" class="input-group mb-3" style="display:contents;">
                         <span class="input-group-text">></span>
                         <input type="text" class="form-control" name="mString" id="inputTerminal">
@@ -82,7 +83,14 @@
 
             async function spawnAboutElement()
             {
-                document.body.innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", new Server_Manager_Application.Models.Messaging.InfoMessage { id = 10, title = @ViewBag.AppName, description = "", message = "@Copyright 2025 / 2025" })`;
+                document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", 
+                    new Server_Manager_Application.Models.Messaging.InfoMessage { 
+                        id = 10, 
+                        title = @ViewBag.AppName, 
+                        description = "", 
+                        message = "@Copyright 2025 / 2025" 
+                    }
+                )`;
             }
 
             async function performMessageAnimation(messageContainer) {
@@ -133,7 +141,7 @@
                 {
                     console.error(err);
 
-                    document.body.innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_RedAlert",
+                    document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_AlertBox",
                         new Server_Manager_Application.Models.Messaging.AlertMessage { 
                             id = 349, 
                             title = CommonWords.error.ToUpper() + ":", 

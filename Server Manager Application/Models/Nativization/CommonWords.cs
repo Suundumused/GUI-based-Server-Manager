@@ -4,6 +4,7 @@ namespace Server_Manager_Application.Models.Nativization
 {
     public static class CommonWords
     {
+        public readonly static string name = AppResources.Name;
         public readonly static string about = AppResources.About;
         public readonly static string login = AppResources.Login;
         public readonly static string logout = AppResources.Logout;
@@ -15,5 +16,8 @@ namespace Server_Manager_Application.Models.Nativization
         public readonly static string console = AppResources.Console;
         public readonly static string error = AppResources.Error;
         public readonly static string page = AppResources.Page;
+        public readonly static string type = AppResources.Type;
+        public readonly static string folder = AppResources.Folder;
+        public readonly static string size = AppResources.Size;
     }
 }

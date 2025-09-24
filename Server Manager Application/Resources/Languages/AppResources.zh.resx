@@ -201,4 +201,19 @@
   <data name="MissingField" xml:space="preserve">
     <value>缺少回應欄位</value>
   </data>
-</root>
+  <data name="Name" xml:space="preserve">
+    <value>姓名</value>
+  </data>
+  <data name="Type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Folder" xml:space="preserve">
+    <value>資料夾</value>
+  </data>
+  <data name="Size" xml:space="preserve">
+    <value>尺寸</value>
+  </data>
+  <data name="LastModified" xml:space="preserve">
+    <value>最後修改時間</value>
+  </data>
+  </root>

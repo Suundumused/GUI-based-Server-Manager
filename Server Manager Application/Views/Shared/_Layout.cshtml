@@ -22,7 +22,7 @@
                         <div>
                             <ul class="navbar-nav me-auto">
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:500; font-size:larger;">@LocalUserInfo.username</a>
+                                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="font-weight:500; font-size:larger;">@LocalUserInfo.username</a>
                                     <div class="dropdown-menu">
                                     <a class="dropdown-item" id="user_about_button">@CommonWords.profile</a>
                                     <div class="dropdown-divider"></div>
@@ -33,7 +33,7 @@
                         </div>
                         <ul class="navbar-nav me-auto">
                             <li class="nav-item">
-                                <a class="nav-link" href="#" id="app_about_button">@CommonWords.about</a>
+                                <a class="nav-link" id="app_about_button">@CommonWords.about</a>
                             </li>
                         </ul>
                     <a class="navbar-brand" id="a_time">@ViewBag.Hour</a>
@@ -43,13 +43,14 @@
         </header>
         <div class="container">
         <main role="main" class="pb-3">
+                <div id="messageContainer"></div>
                 @RenderBody()
             </main>
         </div>
         <footer class="border-top footer text-muted" style="position: fixed; bottom: 0; width: 100%">
             <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark" >
                 <div class="container-fluid">
-                    <a class="navbar-brand" href="#">@LocalUserInfo.domain</a>
+                    <a class="navbar-brand" >@LocalUserInfo.domain</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -64,7 +65,14 @@
         <script>
             async function spawnAboutElement()
             {
-                document.body.innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", new Server_Manager_Application.Models.Messaging.InfoMessage { id = 10, title = @ViewBag.AppName, description = "", message = "@Copyright 2025 / 2025" })`;
+                document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Cards/_CardFloatingInfo", 
+                    new Server_Manager_Application.Models.Messaging.InfoMessage { 
+                        id = 10, 
+                        title = @ViewBag.AppName, 
+                        description = "", 
+                        message = "@Copyright 2025 / 2025" 
+                    }
+                )`;
             }
         </script>
 

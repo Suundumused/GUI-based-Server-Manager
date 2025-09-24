@@ -1,0 +1,11 @@
+@* Views/Shared/Widgets/Messaging/_CardFile.cshtml *@
+
+@model Server_Manager_Application.Models.Messaging.FileData
+
+<tr class="@Model._class" id="path_@Model.id">
+    <th scope="row">@Model.fileName</th>
+    <td>@Model.modified</td>
+    <td>@Model.fileType</td>
+    <td>@Model.fileSize mb</td>
+    <td hidden id="uri_path_@Model.id">@Model.fileName</td>
+</tr>

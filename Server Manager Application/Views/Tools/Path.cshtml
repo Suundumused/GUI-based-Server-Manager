@@ -1,4 +1,8 @@
-﻿@using Server_Manager_Application.Models.Nativization
+﻿@model Server_Manager_Application.Models.Messaging.PathResult
+
+@using Server_Manager_Application.Models.Nativization
+@using Server_Manager_Application.Models.Messaging
+@using Server_Manager_Application.Common.Logging.Console_Utils
 
 @{
     Layout = "_advancedToolLayout";
@@ -7,14 +11,30 @@
 
 <style>
     body {
-        background-color: black;
+        background-color: #f2efe9;
     }
 </style>
 
-<div id="paths" style="margin:1px; margin-bottom:65px;"></div>
+<table class="table table-hover" style="border-collapse:separate; border-spacing: 0 0.5em; margin-bottom:60px;">
+    <thead>
+        <tr>
+        <th scope="col">@CommonWords.name</th>
+        <th scope="col">@CommonPhrases.lastModified</th>
+        <th scope="col">@CommonWords.type</th>
+        <th scope="col">@CommonWords.size</th>
+        </tr>
+  </thead>
+  <tbody id="paths">
+        @for (int i = 0; i < Model.files.Count; i++)
+        {
+            @await Html.PartialAsync("Widgets/Cards/_FileCard", Model.files[i]);
+        }
+  </tbody>
+</table>
 
 <script>
     const highlightClassTheme = "badge bg-warning";
+    const pathsChildrenElements = document.getElementById("paths").children;
 
 
     document.getElementById('searchForm').addEventListener('submit', (event) =>
@@ -22,7 +42,7 @@
             event.preventDefault();
 
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const listText = document.getElementById("paths").getElementsByTagName("p");
+            const listText = pathsChildrenElements.getElementsByTagName("p");
 
             if (searchTerm == null || searchTerm == " " || searchTerm == "")
             {
@@ -49,6 +69,15 @@
             }
         }
     );
+
+    for (let i = 0; i < pathsChildrenElements.length; i++){
+        var element = pathsChildrenElements[i]
+
+        element.addEventListener('click', function() {
+                window.open(window.location.href + "/" + document.getElementById("uri_" + pathsChildrenElements[i].id).innerHTML.replace(/\\/g, "/"), '_self');
+            }
+        );
+    };
 
     document.getElementById('searchInput').addEventListener('keyup', (event) =>
         {

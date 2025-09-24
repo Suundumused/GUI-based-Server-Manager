@@ -1,111 +1,256 @@
-﻿namespace Server_Manager_Application.Runtime.HighLevel
+﻿using Microsoft.AspNetCore.Mvc;
+
+using Server_Manager_Application.Models.Messaging;
+using Server_Manager_Application.Models.Nativization;
+
+
+namespace Server_Manager_Application.Runtime.HighLevel
 {
     public static class PathReadWrite
     {
-        private static string currentPath = GetHome();
+        private static readonly string basePath = GetHome();
 
 
-        public static string GetHome()
+        public static string MainPath(string path)
+        {
+            return path.Replace(basePath, "");
+        }
+        
+        public static string? FullPath(string? path)
+        {
+            if (path is null)
+            {
+                return path;
+            }
+            
+            return Path.Combine(basePath, path);
+        }
+
+        private static string GetHome()
         {
             return Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
         }
 
-        private static string[] ViewPath()
+        private static long GetSizeWithRecursion(DirectoryInfo directory)
         {
-            return Directory.GetDirectories(currentPath).Concat(Directory.GetFiles(currentPath)).ToArray();
+            if (directory == null || !directory.Exists)
+            {
+                throw new DirectoryNotFoundException("Directory does not exist.");
+            }
+
+            long size = 0;
+
+            try
+            {
+                size += directory.GetFiles().Sum(file => file.Length);
+                size += directory.GetDirectories().Sum(GetSizeWithRecursion);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.WriteLine($"We do not have access to {directory}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"We encountered an error processing {directory}: ");
+                Console.WriteLine($"{ex.Message}");
+            }
+
+            return size;
         }
 
-        public static (string[], string, string?, bool) AccessDirectory(string? selectedPath = null, short maxSize = -1)
+        private static async Task<List<FileData>> ViewPath(string path)
+        {
+            List<FileData> pathListList = new List<FileData>();
+
+            int i = 0;
+            foreach (string file in Directory.GetDirectories(path).Concat(Directory.GetFiles(path)))
+            {
+                pathListList.Add(await CompileFileInfo(file, i));
+                i++;
+            }
+
+            return pathListList;
+        }
+
+        public static string GetParent(string? path)
+        {
+            if (path is null)
+            {
+                return basePath;
+            }
+
+            try
+            {
+                path = Directory.GetParent(path)?.ToString();
+
+                if (Path.Exists(path))
+                {
+                    return path;
+                }
+
+                throw new Exception();
+            }
+            catch
+            {
+                return GetParent(path);
+            }
+        }
+
+        public static async Task<FileData> CompileFileInfo(string path, int id)
+        {
+            return await Task.Run(() =>
+            {
+                bool isFile = File.Exists(path);
+
+                if (isFile)
+                {
+                    FileInfo fileAttributes = new FileInfo(path);
+
+                    return new FileData
+                    {
+                        id = id,
+                        isFile = isFile,
+
+                        _class = "table-primary",
+                        fileName = fileAttributes.Name,
+
+                        fileSize = (long)(fileAttributes.Length * 0.000001),
+
+                        fileType = path.Split(".").Last(),
+                        path = path,
+
+                        created = fileAttributes.CreationTimeUtc,
+                        modified = fileAttributes.LastWriteTimeUtc,
+                        accessed = fileAttributes.LastAccessTimeUtc
+                    };
+                }
+
+                DirectoryInfo folderAttributes = new DirectoryInfo(path);
+
+                long totalSize = 0;
+                totalSize += Directory.EnumerateFiles(path).Sum(file => new FileInfo(file).Length);
+
+                /*foreach (string dir in Directory.EnumerateDirectories(path))
+                {
+                    totalSize += GetSizeWithRecursion(new DirectoryInfo(dir));
+                }*/
+
+                return new FileData
+                {
+                    id = id,
+                    isFile = isFile,
+
+                    _class = "table-warning",
+                    fileName = folderAttributes.Name,
+
+                    fileSize = (long)(totalSize * 0.000001),
+
+                    fileType = CommonWords.folder,
+                    path = path,
+
+                    created = folderAttributes.CreationTimeUtc,
+                    modified = folderAttributes.LastWriteTimeUtc,
+                    accessed = folderAttributes.LastAccessTimeUtc
+                };
+            });
+        }
+
+        public static async Task<(List<FileData>, string, string?, bool)> AccessDirectoryAsync(string? selectedPath = null, short maxSize = -1)
         {
             string? errorMsg = null;
-            bool pathExists;
+            List<FileData> paths;
 
             try
             {
                 if (selectedPath is not null)
-                {
-                    pathExists = Path.Exists(selectedPath);
-                    if (pathExists)
-                    {
-                        currentPath = selectedPath;
+                {                     
+                    selectedPath = Path.Combine(basePath, selectedPath);
+                    paths = await ViewPath(selectedPath);
 
-                        return (
-                            ViewPath()[..maxSize],
-                            currentPath,
-                            errorMsg,
-                            pathExists
-                        );
-                    }
-
-                    throw new DirectoryNotFoundException("No such directory.");
-                }
-
-                pathExists = Path.Exists(currentPath);
-                if (pathExists)
-                {
                     return (
-                        ViewPath()[..maxSize],
-                        currentPath,
+                        (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^1)] : paths,
+                        selectedPath,
                         errorMsg,
-                        pathExists
+                        false
                     );
                 }
 
-                throw new DirectoryNotFoundException("No such directory.");
+                paths = await ViewPath(basePath);
+
+                return (
+                    (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^1)] : paths,
+                    basePath,
+                    errorMsg,
+                    false
+                );
             }
             catch (Exception ex)
             {
-                pathExists = false;
                 errorMsg = ex.Message;
+                selectedPath = GetParent(selectedPath);
             }
 
+            paths = await ViewPath(selectedPath);
+
             return (
-                ViewPath()[..maxSize],
-                currentPath,
+                (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^1)] : paths,
+                selectedPath,
                 errorMsg,
-                pathExists
+                true
             );
         }
 
-        public static (string[], string, string?, bool) BackDirectory(short maxSize = -1)
+        public static async Task<(FileStreamResult?, string, string?)> FileStreamAsync(string path)
         {
-            string? errorMsg = null;
-            bool pathExists;
+            path = Path.Combine(basePath, path);
 
             try
             {
-                string? tempPath = Directory.GetParent(currentPath)?.ToString();
-                if (tempPath is not null)
+                FileStream stream = new FileStream(
+                    path,
+
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.Read,
+
+                    bufferSize: 81920,
+                    useAsync: true
+                );
+
+                // await a dummy read if you need to ensure open success
+                await Task.Yield(); // keeps it truly async-friendly
+
+                FileStreamResult fileStreamResult = new FileStreamResult(stream, "application/octet-stream")
                 {
-                    pathExists = Path.Exists(tempPath);
-                    if (pathExists)
-                    {
-                        currentPath = tempPath;
+                    FileDownloadName = Path.GetFileName(path)
+                };
 
-                        return (
-                            ViewPath()[..maxSize],
-                            currentPath,
-                            errorMsg,
-                            pathExists
-                        );
-                    }
-                }
-
-                throw new DirectoryNotFoundException("No such directory.");
+                return (fileStreamResult, path, null);
             }
             catch (Exception ex)
             {
-                currentPath = GetHome();
-                pathExists = false;
-                errorMsg = ex.Message;
+                return (null, path, ex.Message);
             }
 
-            return (
-                ViewPath()[..maxSize],
-                currentPath,
-                errorMsg,
-                pathExists
-            );
+        }
+        
+        public static async Task<(bool, string, string?)> DeleteFile(string path)
+        {
+            return await Task.Run(() =>
+            {
+                path = Path.Combine(basePath, path);
+
+                try
+                {
+                    File.Delete(path);
+
+                    return (false, path, string.Empty);
+                }
+                catch(Exception ex)
+                {
+                    return (true, path, ex.Message);
+                }
+            });
         }
     }
 }
