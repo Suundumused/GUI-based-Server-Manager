@@ -29,9 +29,12 @@
         </button>
     </td>
     <td style="vertical-align: middle;">
-        <button type="button" class="btn btn-secondary" style="padding: 5px;" id="paste_@Model.id">
-            <img src="/content/icons/io-level/clipboard2-check.svg"/>
-        </button>
+        @if (Model.fileType == "Folder")
+        {
+            <button type="button" class="btn btn-secondary" style="padding: 5px;" id="paste_@Model.id">
+                <img src="/content/icons/io-level/clipboard2-check.svg"/>
+            </button>
+        }
     </td>
     <td style="vertical-align: middle;">
         <button type="button" class="btn btn-danger" style="padding: 5px;" id="delete_@Model.id">

@@ -7,6 +7,7 @@ using Server_Manager_Application.Models.Messaging;
 using Server_Manager_Application.Models.Options;
 using Server_Manager_Application.Resources.Languages;
 using Server_Manager_Application.Runtime.HighLevel;
+using Server_Manager_Application.Models.Nativization;
 
 
 namespace Server_Manager_Application.Controllers
@@ -118,7 +119,7 @@ namespace Server_Manager_Application.Controllers
             }
             else
             {
-                TempData["Info"] = path + " deleted successfully.";
+                TempData["Info"] = $@"""{path}""" + $" {CommonPhrases.deleted}";
 
                 return Json(new { state });
             }

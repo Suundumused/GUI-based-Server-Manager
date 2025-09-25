@@ -216,4 +216,13 @@
   <data name="LastModified" xml:space="preserve">
     <value>最後修改時間</value>
   </data>
+  <data name="Info" xml:space="preserve">
+    <value>資訊</value>
+  </data>
+  <data name="Copied" xml:space="preserve">
+    <value>已複製到剪貼簿。</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>已成功刪除。</value>
+  </data>
   </root>

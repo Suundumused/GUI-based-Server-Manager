@@ -353,5 +353,29 @@ namespace Server_Manager_Application.Resources.Languages {
                 return ResourceManager.GetString("LastModified", resourceCulture);
             }
         }
+
+        internal static string Info
+        {
+            get
+            {
+                return ResourceManager.GetString("Info", resourceCulture);
+            }
+        }
+
+        internal static string Copied
+        {
+            get
+            {
+                return ResourceManager.GetString("Copied", resourceCulture);
+            }
+        }
+
+        internal static string Deleted
+        {
+            get
+            {
+                return ResourceManager.GetString("Deleted", resourceCulture);
+            }
+        }
     }
 }

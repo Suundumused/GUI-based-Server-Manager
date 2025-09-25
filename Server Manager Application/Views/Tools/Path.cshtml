@@ -30,9 +30,12 @@
         </tr>
   </thead>
   <tbody id="paths">
-        @for (int i = 0; i < Model.files.Count; i++)
+        @if (Model.files is not null)
         {
-            @await Html.PartialAsync("Widgets/Cards/_FileCard", Model.files[i]);
+            @for (int i = 0; i < Model.files.Count; i++)
+            {
+                @await Html.PartialAsync("Widgets/Cards/_FileCard", Model.files[i]);
+            }
         }
   </tbody>
 </table>
@@ -87,6 +90,18 @@
                     deleteFile(event, window.location.href.replace("Path", "Delete") + "/" + document.getElementById("uri_" + pathsChildrenElements[i].id).innerHTML.replace(/\\/g, "/"));
                 }
             );
+
+            document.getElementById("copy_" + i).addEventListener('click', (event) => {
+                    let path = document.getElementById("uri_" + pathsChildrenElements[i].id).innerHTML.replace(/\\/g, "/");
+
+                    navigator.clipboard.writeText(path);
+                    spawnAlertBox(`"${path}"` + " @CommonPhrases.copied", "alert-light", "@CommonWords.info", true);
+                }
+            );
+
+            if (document.getElementById("path_type_" + i).innerHTML == "Folder"){
+                //document.getElementById("paste_" + i); do de thing...
+            }
         }
     };
 

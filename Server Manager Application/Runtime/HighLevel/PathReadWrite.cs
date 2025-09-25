@@ -168,7 +168,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
                     paths = await ViewPath(selectedPath);
 
                     return (
-                        (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^1)] : paths,
+                        (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^0)] : paths,
                         selectedPath,
                         errorMsg,
                         false
@@ -178,7 +178,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
                 paths = await ViewPath(basePath);
 
                 return (
-                    (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^1)] : paths,
+                    (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^0)] : paths,
                     basePath,
                     errorMsg,
                     false
@@ -193,7 +193,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
             paths = await ViewPath(selectedPath);
 
             return (
-                (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^1)] : paths,
+                (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^0)] : paths,
                 selectedPath,
                 errorMsg,
                 true

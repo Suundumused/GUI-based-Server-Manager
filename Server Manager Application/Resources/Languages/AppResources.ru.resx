@@ -216,4 +216,13 @@
   <data name="LastModified" xml:space="preserve">
     <value>Последнее изменение</value>
   </data>
+  <data name="Info" xml:space="preserve">
+    <value>Информация</value>
+  </data>
+  <data name="Copied" xml:space="preserve">
+    <value>скопировано в буфер обмена.</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>удалено успешно.</value>
+  </data>
 </root>

@@ -216,4 +216,13 @@
   <data name="LastModified" xml:space="preserve">
     <value>Last modification</value>
   </data>
+  <data name="Info" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="Copied" xml:space="preserve">
+    <value>copied to clipboard.</value>
+  </data>
+  <data name="Deleted" xml:space="preserve">
+    <value>successfully deleted.</value>
+  </data>
 </root>

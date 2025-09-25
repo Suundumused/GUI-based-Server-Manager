@@ -90,9 +90,9 @@
                 )`;
             }
 
-            async function spawnAlertBox(message, asClass = "alert-danger", initMsg = "@CommonWords.error.ToUpper()")
+            async function spawnAlertBox(message, asClass = "alert-danger", initMsg = "@CommonWords.error.ToUpper()", replace = false)
             {
-                document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_AlertBox",
+                const htmlElement = `@await Html.PartialAsync("Widgets/Messaging/_AlertBox",
                     new Server_Manager_Application.Models.Messaging.AlertMessage { 
                         id = 349, 
                         title = "initMsg" + ":", 
@@ -101,6 +101,13 @@
                         classLike = "asClass"
                     }
                 )`.replace("err", message).replace("asClass", asClass).replace("initMsg", initMsg);
+
+                if (replace){
+                    document.getElementById("messageContainer").innerHTML = htmlElement
+                }
+                else{
+                    document.getElementById("messageContainer").innerHTML += htmlElement
+                }
 
                 const messageContainer = document.getElementById("widget_349");
                 document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(messageContainer)});

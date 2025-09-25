@@ -19,5 +19,6 @@ namespace Server_Manager_Application.Models.Nativization
         public readonly static string type = AppResources.Type;
         public readonly static string folder = AppResources.Folder;
         public readonly static string size = AppResources.Size;
+        public readonly static string info = AppResources.Info;
     }
 }
