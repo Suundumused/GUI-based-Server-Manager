@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
+using Server_Manager_Application.Common.Logging.Console_Utils;
 using Server_Manager_Application.Models.Messaging;
 using Server_Manager_Application.Models.Nativization;
 
@@ -242,7 +242,14 @@ namespace Server_Manager_Application.Runtime.HighLevel
 
                 try
                 {
-                    File.Delete(path);
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                    else
+                    {
+                        Directory.Delete(path);
+                    }
 
                     return (false, path, string.Empty);
                 }

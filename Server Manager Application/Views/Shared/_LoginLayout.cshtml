@@ -46,29 +46,31 @@
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
 
-        <script async>
-            if ('@ViewBag.LoginState' !== '')
-            {
-                document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_AlertBox",
-                    new Server_Manager_Application.Models.Messaging.AlertMessage { 
-                        id = 349, 
-                        title = CommonWords.error.ToUpper(), 
-                        description = ViewBag.LoginState, 
-                        message = "" 
-                    }
-                )`;
-        
-                const messageContainer = document.getElementById("widget_349");
-                document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(messageContainer)});
+        @if (ViewBag.LoginState is not null)
+        {
+            <script async>
+                async function spawnAlertBox(message, asClass = "alert-danger", initMsg = "@CommonWords.error.ToUpper()")
+                {
+                    document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_AlertBox",
+                        new Server_Manager_Application.Models.Messaging.AlertMessage { 
+                            id = 349, 
+                            title = "initMsg" + ":", 
+                            description = "err", 
+                            message = "" ,
+                            classLike = "asClass"
+                        }
+                    )`.replace("err", message).replace("asClass", asClass).replace("initMsg", initMsg);
 
-                async function performMessageAnimation() {
+                    const messageContainer = document.getElementById("widget_349");
+                    document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(messageContainer)});
+
                     await fadeIn(messageContainer, 500);
                 }
 
-                performMessageAnimation();
-            }
-        </script>
-
+                spawnAlertBox("@ViewBag.LoginState");
+            </script>
+        }
+        
         @await RenderSectionAsync("Scripts", required: false)
     </body>
 </html>

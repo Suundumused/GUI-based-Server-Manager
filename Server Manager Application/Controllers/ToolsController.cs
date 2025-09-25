@@ -7,9 +7,6 @@ using Server_Manager_Application.Models.Messaging;
 using Server_Manager_Application.Models.Options;
 using Server_Manager_Application.Resources.Languages;
 using Server_Manager_Application.Runtime.HighLevel;
-using Microsoft.AspNetCore.Authentication;
-using Server_Manager_Application.Common.Logging.Console_Utils;
-using System.Threading.Tasks;
 
 
 namespace Server_Manager_Application.Controllers
@@ -108,22 +105,23 @@ namespace Server_Manager_Application.Controllers
 
         [HttpDelete]
         [Route("Tools/Delete/{*path}")]
-        public async Task<IActionResult> Delete(string path)
+        public async Task<JsonResult> Delete(string path)
         {
             (bool, string, string?) pathResult = await PathReadWrite.DeleteFile(path);
+            bool state = pathResult.Item1;
 
             path = pathResult.Item2;
 
-            if (pathResult.Item1)
+            if (state)
             {
-                TempData["Error"] = pathResult.Item3;
+                return Json(new { response = pathResult.Item3, state });
             }
             else
             {
-                TempData["Info"] = $"{path} Deletamento sucesso";
-            }
+                TempData["Info"] = path + " deleted successfully.";
 
-            return Redirect("/Tools/Path" + PathReadWrite.MainPath(PathReadWrite.GetParent(path)));
+                return Json(new { state });
+            }
         }
     }
 }

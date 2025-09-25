@@ -3,9 +3,41 @@
 @model Server_Manager_Application.Models.Messaging.FileData
 
 <tr class="@Model._class" id="path_@Model.id">
-    <th scope="row">@Model.fileName</th>
-    <td>@Model.modified</td>
-    <td>@Model.fileType</td>
-    <td>@Model.fileSize mb</td>
-    <td hidden id="uri_path_@Model.id">@Model.fileName</td>
+    <td style="vertical-align: middle;" >
+        @if (Model.fileType == "Folder")
+        {
+            <button type="button" class="btn btn-light" style="padding: 5px;" id="download_@Model.id">
+                <img src="/content/icons/io-level/arrow-bar-right.svg"/>
+            </button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-info" style="padding: 5px;" id="download_@Model.id">
+                <img src="/content/icons/io-level/download.svg"/>
+            </button>
+        }
+    </td>
+
+    <th scope="row" style="vertical-align: middle;">@Model.fileName</th>
+    <td style="vertical-align: middle;">@Model.modified</td>
+    <td id="path_type_@Model.id" style="vertical-align: middle;">@Model.fileType</td>
+    <td style="vertical-align: middle;">@Model.fileSize mb</td>
+
+    <td style="vertical-align: middle;">
+        <button type="button" class="btn btn-secondary" style="padding: 5px;" id="copy_@Model.id">
+            <img src="/content/icons/io-level/copy.svg"/>
+        </button>
+    </td>
+    <td style="vertical-align: middle;">
+        <button type="button" class="btn btn-secondary" style="padding: 5px;" id="paste_@Model.id">
+            <img src="/content/icons/io-level/clipboard2-check.svg"/>
+        </button>
+    </td>
+    <td style="vertical-align: middle;">
+        <button type="button" class="btn btn-danger" style="padding: 5px;" id="delete_@Model.id">
+            <img src="/content/icons/io-level/x-octagon.svg"/>
+        </button>
+    </td>
+    
+    <td hidden id="uri_path_@Model.id" style="vertical-align: middle;">@Model.fileName</td>
 </tr>

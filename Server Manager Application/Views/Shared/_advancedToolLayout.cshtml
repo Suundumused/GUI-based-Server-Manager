@@ -2,6 +2,7 @@
 @using Server_Manager_Application.Models.Static
 
 @{
+    string? infoMessage = TempData["Info"] as string;
     string? errorMessage = TempData["Error"] as string;
 }
 
@@ -73,7 +74,8 @@
 
         <script async>
             const paths = document.getElementById("paths");
-            const errorMessage = `@Html.Raw(errorMessage)`;            
+            const errorMessage = `@Html.Raw(errorMessage)`;
+            const infoMessage = `@Html.Raw(infoMessage)`;            
 
 
             async function spawnAboutElement()
@@ -88,29 +90,57 @@
                 )`;
             }
 
-            async function performMessageAnimation(messageContainer) {
-                await fadeIn(messageContainer, 500);
-            }
-
-            if (errorMessage !== "")
+            async function spawnAlertBox(message, asClass = "alert-danger", initMsg = "@CommonWords.error.ToUpper()")
             {
                 document.getElementById("messageContainer").innerHTML += `@await Html.PartialAsync("Widgets/Messaging/_AlertBox",
                     new Server_Manager_Application.Models.Messaging.AlertMessage { 
                         id = 349, 
-                        title = CommonWords.error.ToUpper(), 
-                        description = ViewBag.LoginState, 
-                        message = errorMessage 
+                        title = "initMsg" + ":", 
+                        description = "err", 
+                        message = "" ,
+                        classLike = "asClass"
                     }
-                )`;
-        
+                )`.replace("err", message).replace("asClass", asClass).replace("initMsg", initMsg);
+
                 const messageContainer = document.getElementById("widget_349");
                 document.getElementById("btn_349").addEventListener('click', (event) => {handleCloseMessage(messageContainer)});
 
-                async function performMessageAnimation() {
-                    await fadeIn(messageContainer, 500);
-                }
+                await fadeIn(messageContainer, 500);
+            }
 
-                performMessageAnimation();
+            async function deleteFile(event, path) {
+                const signal = AbortSignal.timeout(7000);
+
+                try {
+                    const response = await fetch(path, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        signal: signal
+                    });
+
+                    const result = await response.json();
+
+                    if (result.state) 
+                    {
+                        await spawnAlertBox(result.response);
+                        return;
+                    }
+
+                    window.location.reload();
+                
+                } catch (err) {
+                    await spawnAlertBox(err.message);
+                }
+            }
+
+            if (infoMessage !== "")
+            {
+                spawnAlertBox(infoMessage, "alert-success", "OK");
+            }
+
+            if (errorMessage !== "")
+            {
+                spawnAlertBox(errorMessage);
             }
         
         </script>

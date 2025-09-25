@@ -18,10 +18,15 @@
 <table class="table table-hover" style="border-collapse:separate; border-spacing: 0 0.5em; margin-bottom:60px;">
     <thead>
         <tr>
-        <th scope="col">@CommonWords.name</th>
-        <th scope="col">@CommonPhrases.lastModified</th>
-        <th scope="col">@CommonWords.type</th>
-        <th scope="col">@CommonWords.size</th>
+            <th scope="col"></th>
+            <th scope="col">@CommonWords.name</th>
+            <th scope="col">@CommonPhrases.lastModified</th>
+            <th scope="col">@CommonWords.type</th>
+            <th scope="col">@CommonWords.size</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
   </thead>
   <tbody id="paths">
@@ -71,12 +76,18 @@
     );
 
     for (let i = 0; i < pathsChildrenElements.length; i++){
-        var element = pathsChildrenElements[i]
+        if (pathsChildrenElements[i])
+        {
+            document.getElementById("download_" + i).addEventListener('click', function() {
+                    window.open(window.location.href + "/" + document.getElementById("uri_" + pathsChildrenElements[i].id).innerHTML.replace(/\\/g, "/"), '_self');
+                }
+            );
 
-        element.addEventListener('click', function() {
-                window.open(window.location.href + "/" + document.getElementById("uri_" + pathsChildrenElements[i].id).innerHTML.replace(/\\/g, "/"), '_self');
-            }
-        );
+            document.getElementById("delete_" + i).addEventListener('click', (event) => {
+                    deleteFile(event, window.location.href.replace("Path", "Delete") + "/" + document.getElementById("uri_" + pathsChildrenElements[i].id).innerHTML.replace(/\\/g, "/"));
+                }
+            );
+        }
     };
 
     document.getElementById('searchInput').addEventListener('keyup', (event) =>
