@@ -5,7 +5,7 @@ using Server_Manager_Application.Common.Logging.ConsoleUtils;
 using Server_Manager_Application.Resources.Languages;
 
 
-namespace Server_Manager_Application.Runtime.HighLevel
+namespace Server_Manager_Application.SubSystem.HighLevel
 {
     public class CommandRunner : IDisposable
     {

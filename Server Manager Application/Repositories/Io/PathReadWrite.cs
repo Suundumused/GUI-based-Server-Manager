@@ -3,7 +3,7 @@ using Server_Manager_Application.Models.Messaging;
 using Server_Manager_Application.Models.Nativization;
 
 
-namespace Server_Manager_Application.Runtime.HighLevel
+namespace Server_Manager_Application.Repositories.Io
 {
     public class PathReadWrite
     {
@@ -172,7 +172,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
                     paths = await ViewPath(selectedPath);
 
                     return (
-                        (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^0)] : paths,
+                        paths.Count > 0 ? paths[..(maxSize > 0 ? maxSize : ^0)] : paths,
                         selectedPath,
                         errorMsg,
                         false
@@ -182,7 +182,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
                 paths = await ViewPath(basePath);
 
                 return (
-                    (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^0)] : paths,
+                    paths.Count > 0 ? paths[..(maxSize > 0 ? maxSize : ^0)] : paths,
                     basePath,
                     errorMsg,
                     false
@@ -197,7 +197,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
             paths = await ViewPath(selectedPath);
 
             return (
-                (paths.Count > 0) ? paths[..((maxSize > 0) ? maxSize : ^0)] : paths,
+                paths.Count > 0 ? paths[..(maxSize > 0 ? maxSize : ^0)] : paths,
                 selectedPath,
                 errorMsg,
                 true
