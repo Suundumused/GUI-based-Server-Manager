@@ -6,10 +6,9 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authorization;
 
 using System.Net;
-
-using Server_Manager_Application.Common.Security.Interface;
 using Server_Manager_Application.Models.Options;
 using Server_Manager_Application.Resources.Languages;
+using Server_Manager_Application.Services.Security.Interface;
 
 
 namespace Server_Manager_Application.Controllers

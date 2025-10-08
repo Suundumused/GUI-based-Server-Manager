@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using System.CommandLine;
 using System.CommandLine.Parsing;
 
-using Server_Manager_Application.Common.Logging.Console_Utils;
-using Server_Manager_Application.Common.Security.Interface;
-using Server_Manager_Application.Common.Security.Public;
+using Server_Manager_Application.Common.Logging.ConsoleUtils;
 using Server_Manager_Application.Models.Options;
 using Server_Manager_Application.Resources.Languages;
 using Server_Manager_Application.Runtime.HighLevel;
+using Server_Manager_Application.Services.Security.Interface;
+using Server_Manager_Application.Services.Security.Public;
 
 
 namespace Server_Manager_Application 
@@ -93,6 +93,8 @@ namespace Server_Manager_Application
             WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
             builder.Services.Configure<BasicOptions>(builder.Configuration.GetSection("Basic"));
+            builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+
             builder.Services.AddControllersWithViews(options =>
                 {
                     options.Filters.Add(new AuthorizeFilter());
@@ -113,7 +115,9 @@ namespace Server_Manager_Application
                 }
             );
 
+            builder.Services.AddScoped<PathReadWrite>();
             builder.Services.AddScoped<IService>(provider => new Service(timeOut, maxLoginAttempts));
+
             builder.Services.AddHttpContextAccessor();
 
             WebApplication? app = builder.Build();

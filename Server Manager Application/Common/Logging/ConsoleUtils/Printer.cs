@@ -1,7 +1,7 @@
 ﻿using Server_Manager_Application.Resources.Languages;
 
 
-namespace Server_Manager_Application.Common.Logging.Console_Utils
+namespace Server_Manager_Application.Common.Logging.ConsoleUtils
 {
     public static class Printer
     {

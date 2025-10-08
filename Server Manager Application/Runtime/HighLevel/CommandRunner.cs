@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-using Server_Manager_Application.Common.Logging.Console_Utils;
+using Server_Manager_Application.Common.Logging.ConsoleUtils;
 using Server_Manager_Application.Resources.Languages;
 
 

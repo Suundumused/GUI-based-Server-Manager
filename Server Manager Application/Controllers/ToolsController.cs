@@ -14,8 +14,12 @@ namespace Server_Manager_Application.Controllers
 {
     public class ToolsController : BaseController
     {
-        public ToolsController(IOptions<BasicOptions> basicOptions) : base(basicOptions)
+        PathReadWrite _pathReadWrite;
+
+
+        public ToolsController(IOptions<BasicOptions> basicOptions, PathReadWrite pathReadWrite) : base(basicOptions)
         {
+            _pathReadWrite = pathReadWrite;
         }
 
         [HttpGet]
@@ -63,12 +67,12 @@ namespace Server_Manager_Application.Controllers
         [Route("Tools/Path/{*path}")]
         public async Task<IActionResult> Path(string? path)
         {
-            if (System.IO.File.Exists(PathReadWrite.FullPath(path)))
+            if (System.IO.File.Exists(_pathReadWrite.FullPath(path)))
             {
                 return Redirect("/Tools/Download/" + path);
             }
 
-            (List<FileData>, string, string?, bool) pathResult = await PathReadWrite.AccessDirectoryAsync(path);
+            (List<FileData>, string, string?, bool) pathResult = await _pathReadWrite.AccessDirectoryAsync(path);
 
             string currentPath = pathResult.Item2;
             string? errorMessage = pathResult.Item3;
@@ -77,7 +81,7 @@ namespace Server_Manager_Application.Controllers
             {
                 TempData["Error"] = errorMessage;
 
-                return Redirect("/Tools/Path" + PathReadWrite.MainPath(currentPath));
+                return Redirect("/Tools/Path" + _pathReadWrite.MainPath(currentPath));
             }
 
             return View(new PathResult
@@ -92,13 +96,13 @@ namespace Server_Manager_Application.Controllers
         [Route("Tools/Download/{*path}")]
         public async Task<IActionResult?> Download(string path)
         {
-            (FileStreamResult?, string, string?) PathResult = await PathReadWrite.FileStreamAsync(path);
+            (FileStreamResult?, string, string?) PathResult = await _pathReadWrite.FileStreamAsync(path);
 
             if (PathResult.Item1 is null)
             {
                 TempData["Error"] = PathResult.Item3;
 
-                return Redirect("/Tools/Path" + PathReadWrite.MainPath(PathReadWrite.GetParent(PathResult.Item2)));
+                return Redirect("/Tools/Path" + _pathReadWrite.MainPath(_pathReadWrite.GetParent(PathResult.Item2)));
             }
 
             return PathResult.Item1;
@@ -108,7 +112,7 @@ namespace Server_Manager_Application.Controllers
         [Route("Tools/Delete/{*path}")]
         public async Task<JsonResult> Delete(string path)
         {
-            (bool, string, string?) pathResult = await PathReadWrite.DeleteFile(path);
+            (bool, string, string?) pathResult = await _pathReadWrite.DeleteFile(path);
             bool state = pathResult.Item1;
 
             path = pathResult.Item2;

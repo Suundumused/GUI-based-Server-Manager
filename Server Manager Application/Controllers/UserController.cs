@@ -6,11 +6,10 @@ using Microsoft.Extensions.Options;
 
 using System.Net;
 using System.Security.Claims;
-
-using Server_Manager_Application.Common.Security.Interface;
 using Server_Manager_Application.Models.Options;
 using Server_Manager_Application.Models.Security;
 using Server_Manager_Application.Resources.Languages;
+using Server_Manager_Application.Services.Security.Interface;
 
 
 namespace Server_Manager_Application.Controllers

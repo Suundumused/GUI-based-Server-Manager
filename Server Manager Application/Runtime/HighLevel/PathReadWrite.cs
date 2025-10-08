@@ -1,22 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Server_Manager_Application.Common.Logging.Console_Utils;
 using Server_Manager_Application.Models.Messaging;
 using Server_Manager_Application.Models.Nativization;
 
 
 namespace Server_Manager_Application.Runtime.HighLevel
 {
-    public static class PathReadWrite
+    public class PathReadWrite
     {
         private static readonly string basePath = GetHome();
 
 
-        public static string MainPath(string path)
+        public string MainPath(string path)
         {
             return path.Replace(basePath, "");
         }
         
-        public static string? FullPath(string? path)
+        public string? FullPath(string? path)
         {
             if (path is null)
             {
@@ -58,7 +57,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
             return size;
         }
 
-        private static async Task<List<FileData>> ViewPath(string path)
+        private async Task<List<FileData>> ViewPath(string path)
         {
             List<FileData> pathListList = new List<FileData>();
 
@@ -72,7 +71,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
             return pathListList;
         }
 
-        public static string GetParent(string? path)
+        public string GetParent(string? path)
         {
             if (path is null)
             {
@@ -96,7 +95,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
             }
         }
 
-        public static async Task<FileData> CompileFileInfo(string path, int id)
+        public async Task<FileData> CompileFileInfo(string path, int id)
         {
             return await Task.Run(() =>
             {
@@ -128,8 +127,13 @@ namespace Server_Manager_Application.Runtime.HighLevel
                 DirectoryInfo folderAttributes = new DirectoryInfo(path);
 
                 long totalSize = 0;
-                totalSize += Directory.EnumerateFiles(path).Sum(file => new FileInfo(file).Length);
 
+                try 
+                {
+                    totalSize += Directory.EnumerateFiles(path).Sum(file => new FileInfo(file).Length);
+                }
+                catch { }
+               
                 /*foreach (string dir in Directory.EnumerateDirectories(path))
                 {
                     totalSize += GetSizeWithRecursion(new DirectoryInfo(dir));
@@ -155,7 +159,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
             });
         }
 
-        public static async Task<(List<FileData>, string, string?, bool)> AccessDirectoryAsync(string? selectedPath = null, short maxSize = -1)
+        public async Task<(List<FileData>, string, string?, bool)> AccessDirectoryAsync(string? selectedPath = null, short maxSize = -1)
         {
             string? errorMsg = null;
             List<FileData> paths;
@@ -200,7 +204,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
             );
         }
 
-        public static async Task<(FileStreamResult?, string, string?)> FileStreamAsync(string path)
+        public async Task<(FileStreamResult?, string, string?)> FileStreamAsync(string path)
         {
             path = Path.Combine(basePath, path);
 
@@ -234,7 +238,7 @@ namespace Server_Manager_Application.Runtime.HighLevel
 
         }
         
-        public static async Task<(bool, string, string?)> DeleteFile(string path)
+        public async Task<(bool, string, string?)> DeleteFile(string path)
         {
             return await Task.Run(() =>
             {
